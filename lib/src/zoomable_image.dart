@@ -40,6 +40,7 @@ class ZoomableImage extends StatefulWidget {
 // See /flutter/examples/layers/widgets/gestures.dart
 class _ZoomableImageState extends State<ZoomableImage> {
   ImageStream _imageStream;
+  ImageStreamListener _listenerStream;
   ui.Image _image;
   Size _imageSize;
 
@@ -171,7 +172,8 @@ class _ZoomableImageState extends State<ZoomableImage> {
 
   void _resolveImage() {
     _imageStream = widget.image.resolve(createLocalImageConfiguration(context));
-    _imageStream.addListener(_handleImageLoaded);
+    _listenerStream = ImageStreamListener(_handleImageLoaded);
+    _imageStream.addListener(_listenerStream);
   }
 
   void _handleImageLoaded(ImageInfo info, bool synchronousCall) {
@@ -183,7 +185,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
 
   @override
   void dispose() {
-    _imageStream.removeListener(_handleImageLoaded);
+    _imageStream.removeListener(_listenerStream);
     super.dispose();
   }
 }
